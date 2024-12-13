@@ -41,9 +41,9 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
     )
 
     # Bind parameters
-    itf.bind_param("lh_0",    0, 400)
-    itf.bind_param("lh_1",    0, 400)
-    itf.bind_param("tau_0",   0, 200)
+    itf.bind_param("lh_0",    0, 800)
+    itf.bind_param("lh_1",    0, 800)
+    itf.bind_param("tau_0",   0, 400)
     itf.bind_param("n",       1, 16)
     itf.bind_param("gamma_0", 0, 1e-4)
     
