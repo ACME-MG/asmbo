@@ -6,7 +6,7 @@
 """
 
 # PREFIX = "/mnt/c/Users/Janzen/Desktop/code"
-PREFIX = "~/projects"
+PREFIX = "/home/choij/projects"
 SIM_PATH = f"{PREFIX}/moose_sim"
 MMS_PATH = f"{PREFIX}/mms"
 OPT_PATH = f"{PREFIX}/opt_all"
