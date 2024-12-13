@@ -49,54 +49,46 @@ def main():
         print("="*40)
 
         # 1) Train a surrogate model
-        progressor.start("Training")
+        progressor.progress("Training")
         train_path = f"{get_prefix()}_i{i+1}_s1_sm"
         safe_mkdir(train_path)
         train(train_dict, train_path, PARAM_NAMES, GRAIN_IDS, STRAIN_FIELD, STRESS_FIELD)
-        progressor.end()
 
         # 2) Optimise surrogate model
-        progressor.start("Optimising")
+        progressor.progress("Optimising")
         opt_path = f"{get_prefix()}_i{i+1}_s2_opt"
         safe_mkdir(opt_path)
         optimise(train_path, opt_path, EXP_PATH, MAX_STRAIN, GRAIN_IDS)
-        progressor.end()
 
         # 3) Run CPFEM with optimimsed parameters
-        progressor.start("Validating")
+        progressor.progress("Validating")
         sim_path = f"{get_prefix()}_i{i+1}_s3_sim"
         opt_dict = csv_to_dict(f"{opt_path}/params.csv")
         opt_params = [opt_dict[op][0] for op in OPT_PARAMS]
         safe_mkdir(sim_path)
         simulate(sim_path, MESH_PATH, EXP_PATH, PARAM_NAMES, opt_params, NUM_PROCESSORS)
-        progressor.end()
 
         # 4) Analyse CPFEM simulation results
-        progressor.start("Analysing")
+        progressor.progress("Analysing")
         analyse(sim_path, EXP_PATH, GRAIN_IDS, STRAIN_FIELD, STRESS_FIELD)
-        progressor.end()
 
         # 5) Add to training dictionary
-        progressor.start("Adding")
+        progressor.progress("Adding")
         sim_dict = process(sim_path, PARAM_NAMES, STRAIN_FIELD, STRESS_FIELD, NUM_STRAINS, MAX_STRAIN)
         train_dict = combine_dict(train_dict, sim_dict)
-        progressor.end()
 
 # Progress updater class
 class Progresser:
-    def __init__(self, iteration:int, max_length:int=20):
+    def __init__(self, iteration:int):
         self.iteration = iteration
-        self.max_length = max_length
-        self.start_time = None
         self.step = 1
-    def start(self, verb:str):
-        message = f"{self.iteration}.{self.step}: {verb} ..."
-        padding = self.max_length - len(message)
-        print(f"  {message}{padding*'.'}" , end="")
-        self.start_time = time.time()
-    def end(self):
-        duration = round(time.time()-self.start_time, 2)
-        print(f" [Done] ({duration}s)")
+    def progress(self, verb:str):
+        message = f"===== {self.iteration}.{self.step}: {verb} ====="
+        print("")
+        print("="*len(message))
+        print(message)
+        print("="*len(message))
+        print("")
         self.step += 1
 
 # Main function caller

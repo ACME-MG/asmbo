@@ -27,7 +27,7 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
     """
 
     # Initialise interface
-    itf = Interface(input_path=".", output_here=True, verbose=False)
+    itf = Interface(input_path=".", output_here=True, verbose=True)
     itf.__output_path__ = opt_path
     itf.__get_output__ = lambda x : f"{itf.__output_path__}/{x}"
 
@@ -104,5 +104,4 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
 
     # Optimise and record
     itf.start_recorder(interval=1000)
-    # itf.optimise("moga", num_gens=1000, population=100, offspring=100, crossover=0.8, mutation=0.01)
-    itf.optimise("moga", num_gens=2, population=100, offspring=100, crossover=0.8, mutation=0.01)
+    itf.optimise("moga", num_gens=1000, population=100, offspring=100, crossover=0.8, mutation=0.01)

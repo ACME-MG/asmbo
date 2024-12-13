@@ -27,7 +27,7 @@ def simulate(sim_path:str, mesh_path:str, exp_path:str, param_names:list,
     """
     
     # Initialise interface
-    itf = Interface(input_path=mesh_path, output_here=True, verbose=False)
+    itf = Interface(input_path=mesh_path, output_here=True, verbose=True)
     itf.__output_path__ = sim_path
     itf.__get_output__ = lambda x : f"{itf.__output_path__}/{x}"
 

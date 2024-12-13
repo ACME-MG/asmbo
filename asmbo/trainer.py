@@ -26,7 +26,7 @@ def train(train_dict:dict, train_path:str, param_names:list, grain_ids:list,
     """
 
     # Initialise interface
-    itf = Interface(input_path=".", output_here=True, verbose=False)
+    itf = Interface(input_path=".", output_here=True, verbose=True)
     itf.__output_path__ = train_path
     itf.__get_output__ = lambda x : f"{itf.__output_path__}/{x}"
 
@@ -46,8 +46,7 @@ def train(train_dict:dict, train_path:str, param_names:list, grain_ids:list,
         itf.add_output(output, ["log", "linear"])
 
     # Train surrogate model
-    # itf.define_surrogate("kfold_2", num_splits=5, epochs=2000, batch_size=64, verbose=True)
-    itf.define_surrogate("kfold_2", num_splits=2, epochs=20, batch_size=64, verbose=False)
+    itf.define_surrogate("kfold_2", num_splits=5, epochs=2000, batch_size=64, verbose=True)
     itf.add_training_data()
     itf.train()
     itf.plot_loss_history()
