@@ -76,12 +76,12 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
         ipf = IPF(get_lattice("fcc"))
         direction = [1,0,0]
         max_strain = 0.1
-        get_trajectories = lambda dict, grain_ids, strain_field : [
+        get_trajectories = lambda dict, strain_field : [
             transpose([[g for g, s in zip(dict[f"g{grain_id}_{phi}"], dict[strain_field]) if s <= max_strain] for phi in ["phi_1", "Phi", "phi_2"]])
         for grain_id in grain_ids]
 
         # Plot experimental reorientation trajectories
-        exp_trajectories = get_trajectories(exp_dict, grain_ids, "strain_intervals")
+        exp_trajectories = get_trajectories(exp_dict, "strain_intervals")
         ipf.plot_ipf_trajectory(exp_trajectories, direction, "plot", {"color": "silver", "linewidth": 2})
         ipf.plot_ipf_trajectory(exp_trajectories, direction, "arrow", {"color": "silver", "head_width": 0.01, "head_length": 0.015})
         ipf.plot_ipf_trajectory([[et[0]] for et in exp_trajectories], direction, "scatter", {"color": "silver", "s": 8**2})
@@ -89,7 +89,7 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
             ipf.plot_ipf_trajectory([[exp_trajectory[0]]], direction, "text", {"color": "black", "fontsize": 8, "s": grain_id})
 
         # Plot simulation reorientation trajectories
-        sim_trajectories = get_trajectories(sim_dict, grain_ids, "strain")
+        sim_trajectories = get_trajectories(sim_dict, "strain")
         ipf.plot_ipf_trajectory(sim_trajectories, direction, "plot", {"color": "green", "linewidth": 1, "zorder": 3})
         ipf.plot_ipf_trajectory(sim_trajectories, direction, "arrow", {"color": "green", "head_width": 0.0075, "head_length": 0.0075*1.5, "zorder": 3})
         ipf.plot_ipf_trajectory([[st[0]] for st in sim_trajectories], direction, "scatter", {"color": "green", "s": 6**2, "zorder": 3})

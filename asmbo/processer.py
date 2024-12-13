@@ -55,7 +55,7 @@ def process(sim_path:str, param_names:list, strain_field:str, stress_field:str,
     # Combine, compress, and return
     combined_dict = {**param_dict, **processed_dict}
     for key in combined_dict:
-        combined_dict[key] = round_sf(param_dict[key], 5)
+        combined_dict[key] = round_sf(combined_dict[key], 5)
     return combined_dict
 
 def get_param_dict(params_path:str, param_names:list) -> dict:
