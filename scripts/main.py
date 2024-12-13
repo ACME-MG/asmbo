@@ -28,7 +28,7 @@ PARAM_NAMES    = [f"cp_lh_{i}" for i in range(2)] + ["cp_tau_0", "cp_n", "cp_gam
 OPT_PARAMS     = [f"Param ({pn.replace('cp_','')})" for pn in PARAM_NAMES]
 MESH_PATH      = f"data/mesh"
 SAMPLE_PATH    = "data/sampled_data.csv"
-EXP_PATH       = "data/617_s3_40um_exp.csv.csv"
+EXP_PATH       = "data/617_s3_40um_exp.csv"
 RESULTS_PATH   = "./results"
 
 def main():
