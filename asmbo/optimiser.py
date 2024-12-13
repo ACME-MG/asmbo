@@ -104,4 +104,4 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
 
     # Optimise and record
     itf.start_recorder(interval=1000)
-    itf.optimise("moga", num_gens=1000, population=100, offspring=100, crossover=0.8, mutation=0.01)
+    itf.optimise("moga", num_gens=400, population=100, offspring=100, crossover=0.8, mutation=0.01)
