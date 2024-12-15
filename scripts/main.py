@@ -13,7 +13,7 @@ from asmbo.trainer import train
 from asmbo.optimiser import optimise
 from asmbo.simulator import simulate
 from asmbo.analyser import analyse
-from asmbo.helper.general import combine_dict, safe_mkdir
+from asmbo.helper.general import safe_mkdir
 from asmbo.helper.io import csv_to_dict
 
 # Constants
@@ -60,7 +60,7 @@ def main():
         safe_mkdir(opt_path)
         optimise(train_path, opt_path, EXP_PATH, MAX_STRAIN, GRAIN_IDS)
 
-        # 3) Run CPFEM with optimimsed parameters
+        # 3) Run CPFEM with optimised parameters
         progressor.progress("Validating")
         sim_path = f"{get_prefix()}_i{i+1}_s3_sim"
         opt_dict = csv_to_dict(f"{opt_path}/params.csv")
@@ -75,7 +75,13 @@ def main():
         # 5) Add to training dictionary
         progressor.progress("Adding")
         sim_dict = process(sim_path, PARAM_NAMES, STRAIN_FIELD, STRESS_FIELD, NUM_STRAINS, MAX_STRAIN)
-        train_dict = combine_dict(train_dict, sim_dict)
+        combined_dict = {}
+        for key in train_dict.keys():
+            if key in PARAM_NAMES:
+                combined_dict[key] = train_dict[key] + [sim_dict[key]]*NUM_STRAINS
+            else:
+                combined_dict[key] = train_dict[key] + sim_dict[key]
+        train_dict = combined_dict
 
 # Progress updater class
 class Progresser:

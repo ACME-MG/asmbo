@@ -22,21 +22,6 @@ def safe_mkdir(dir_path:str) -> None:
     except FileExistsError:
         pass
 
-def combine_dict(dict_1:dict, dict_2:dict) -> dict:
-    """
-    Combines two dictionaries of lists together
-
-    Parameters:
-    * `dict_1`: First dictionary of lists
-    * `dict_2`: Second dictionary of lists
-    
-    Returns the combined dictionaries
-    """
-    combined_dict = {}
-    for key in set(dict_1)|set(dict_2):
-        combined_dict[key] = dict_1.get(key,[]) + dict_2.get(key,[])
-    return combined_dict
-
 def remove_consecutive_duplicates(value_list:list) -> list:
     """
     Removes duplicates from a list of values with the
