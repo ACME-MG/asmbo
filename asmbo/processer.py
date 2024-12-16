@@ -33,7 +33,7 @@ def process(sim_path:str, param_names:list, strain_field:str, stress_field:str,
 
     # Initialise strains
     strain_list = sim_dict[strain_field]
-    max_strain = max([s for s in sim_dict[strain_field] if s < max_strain])
+    max_strain = max([s for s in sim_dict[strain_field] if s <= max_strain])
     new_strain_list = list(np.linspace(0, max_strain, num_strains+1)[1:])
     
     # Prepare fields

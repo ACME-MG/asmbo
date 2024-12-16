@@ -8,6 +8,7 @@
 # Libraries
 from asmbo.paths import OPT_PATH, MMS_PATH
 import sys; sys.path += [OPT_PATH]
+import numpy as np
 from opt_all.interface import Interface
 from matplotlib.pyplot import figure
 from asmbo.helper.general import transpose
@@ -57,7 +58,7 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
         itf.add_error(
             error_name  = "geodesic",
             labels      = ["strain_intervals"] + [f"g{i}_{phi}" for phi in ["phi_1", "Phi", "phi_2"]],
-            eval_x_list = [0.02, 0.04, 0.06, 0.08, 0.1],
+            eval_x_list = list(np.linspace(0, max_strain, 6))[1:],
             group       = f"g{i}",
         )
 

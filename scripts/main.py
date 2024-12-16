@@ -22,7 +22,6 @@ STRAIN_FIELD   = "average_strain"
 STRESS_FIELD   = "average_stress"
 NUM_STRAINS    = 32
 NUM_PROCESSORS = 190
-MAX_STRAIN     = 0.1
 GRAIN_IDS      = [59, 63, 86, 237, 303]
 PARAM_NAMES    = [f"cp_lh_{i}" for i in range(2)] + ["cp_tau_0", "cp_n", "cp_gamma_0"]
 OPT_PARAMS     = [f"Param ({pn.replace('cp_','')})" for pn in PARAM_NAMES]
@@ -41,6 +40,11 @@ def main():
     train_dict = csv_to_dict(SAMPLE_PATH)
     safe_mkdir(RESULTS_PATH)
 
+    # Define maximum strain
+    exp_dict = csv_to_dict(EXP_PATH)
+    max_strain = exp_dict["strain_intervals"][-1]
+    # max_strain = 0.1
+
     # Iterate
     for i in range(NUM_ITERATIONS):
 
@@ -58,7 +62,7 @@ def main():
         progressor.progress("Optimising")
         opt_path = f"{get_prefix()}_i{i+1}_s2_opt"
         safe_mkdir(opt_path)
-        optimise(train_path, opt_path, EXP_PATH, MAX_STRAIN, GRAIN_IDS)
+        optimise(train_path, opt_path, EXP_PATH, max_strain, GRAIN_IDS)
 
         # 3) Run CPFEM with optimised parameters
         progressor.progress("Validating")
@@ -74,7 +78,7 @@ def main():
 
         # 5) Add to training dictionary
         progressor.progress("Adding")
-        sim_dict = process(sim_path, PARAM_NAMES, STRAIN_FIELD, STRESS_FIELD, NUM_STRAINS, MAX_STRAIN)
+        sim_dict = process(sim_path, PARAM_NAMES, STRAIN_FIELD, STRESS_FIELD, NUM_STRAINS, max_strain)
         combined_dict = {}
         for key in train_dict.keys():
             if key in PARAM_NAMES:
