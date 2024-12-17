@@ -17,6 +17,7 @@ from asmbo.helper.general import safe_mkdir
 from asmbo.helper.io import csv_to_dict
 
 # Constants
+MAX_SIM_TIME   = 20000
 NUM_ITERATIONS = 100
 STRAIN_FIELD   = "average_strain"
 STRESS_FIELD   = "average_stress"
@@ -70,7 +71,7 @@ def main():
         opt_dict = csv_to_dict(f"{opt_path}/params.csv")
         opt_params = [opt_dict[op][0] for op in OPT_PARAMS]
         safe_mkdir(sim_path)
-        simulate(sim_path, MESH_PATH, EXP_PATH, PARAM_NAMES, opt_params, NUM_PROCESSORS)
+        simulate(sim_path, MESH_PATH, EXP_PATH, PARAM_NAMES, opt_params, NUM_PROCESSORS, MAX_SIM_TIME)
 
         # 4) Analyse CPFEM simulation results
         progressor.progress("Analysing")

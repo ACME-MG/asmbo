@@ -13,7 +13,7 @@ from asmbo.helper.io import csv_to_dict
 import math
 
 def simulate(sim_path:str, mesh_path:str, exp_path:str, param_names:list,
-             opt_params:list, num_processors:list):
+             opt_params:list, num_processors:list, max_time:float):
     """
     Trains a surrogate model
     
@@ -24,6 +24,7 @@ def simulate(sim_path:str, mesh_path:str, exp_path:str, param_names:list,
     * `param_names`:    List of parameter names
     * `opt_params`:     List of optimised parameters
     * `num_processors`: Number of processors to use
+    * `max_float`:      Maximum time to run the simulation before terminating
     """
     
     # Initialise interface
@@ -55,7 +56,7 @@ def simulate(sim_path:str, mesh_path:str, exp_path:str, param_names:list,
 
     # Runs the model and saves results
     itf.export_params()
-    itf.simulate("~/moose/deer/deer-opt", num_processors, 100000)
+    itf.simulate("~/moose/deer/deer-opt", num_processors, max_time)
 
     # Conduct post processing
     itf.compress_csv(sf=5, exclude=["x", "y", "z"])
