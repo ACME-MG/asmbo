@@ -15,16 +15,18 @@ from asmbo.helper.general import transpose
 from asmbo.helper.plotter import define_legend, save_plot
 from asmbo.helper.pole_figure import get_lattice, IPF
 
-def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain_ids:list):
+def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain_ids:list,
+             init_params:dict=None):
     """
     Trains a surrogate model
     
     Parameters:
-    * `train_path`:   Path that stores the training results
-    * `opt_path`:     Path to store the optimisation results
-    * `exp_path`:     Path to the experimental data
-    * `max_strain`:   Maximum strain to consider
-    * `grain_ids`:    List of grain IDs to conduct the training
+    * `train_path`:  Path that stores the training results
+    * `opt_path`:    Path to store the optimisation results
+    * `exp_path`:    Path to the experimental data
+    * `max_strain`:  Maximum strain to consider
+    * `grain_ids`:   List of grain IDs to conduct the training
+    * `init_params`: Initial parameter values
     """
 
     # Initialise interface
@@ -40,6 +42,11 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
         map_path   = f"{train_path}/map.csv",
         exp_path   = exp_path
     )
+    
+    # Initialise parameters
+    if init_params != None:
+        for param_name in ["lh_0", "lh_1", "tau_0", "n", "gamma_0"]:
+            itf.init_param(param_name, init_params[param_name])
 
     # Bind parameters
     itf.bind_param("lh_0",    0, 800)
@@ -47,13 +54,13 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
     itf.bind_param("tau_0",   0, 400)
     itf.bind_param("n",       1, 16)
     itf.bind_param("gamma_0", 0, 1e-4)
-    
+
     # Read data
     itf.read_data(exp_path, thin_data=False)
     itf.remove_data("strain", max_strain)
     
     # Add errors
-    itf.add_error("area", labels=["strain", "stress"], group="curve", max_value=0.1, weight=3.1415*len(grain_ids))
+    itf.add_error("area", labels=["strain", "stress"], group="curve", max_value=max_strain, weight=3.1415*len(grain_ids))
     for i in grain_ids:
         itf.add_error(
             error_name  = "geodesic",
@@ -76,7 +83,6 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
         figure()
         ipf = IPF(get_lattice("fcc"))
         direction = [1,0,0]
-        max_strain = 0.1
         get_trajectories = lambda dict, strain_field : [
             transpose([[g for g, s in zip(dict[f"g{grain_id}_{phi}"], dict[strain_field]) if s <= max_strain] for phi in ["phi_1", "Phi", "phi_2"]])
         for grain_id in grain_ids]
@@ -104,5 +110,6 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
     itf.set_function(plot_ipf)
 
     # Optimise and record
+    itf.set_reduction_method(np.sum)
     itf.start_recorder(interval=1000)
     itf.optimise("moga", num_gens=500, population=100, offspring=100, crossover=0.8, mutation=0.01)

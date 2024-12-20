@@ -1,6 +1,6 @@
 """
- Title:         Analyser
- Description:   Analyses the CPFEM simulation results
+ Title:         Plotter
+ Description:   Plots the CPFEM simulation results
  Author:        Janzen Choi
 
 """
@@ -11,9 +11,9 @@ from asmbo.helper.general import transpose
 from asmbo.helper.pole_figure import get_lattice, IPF
 from asmbo.helper.plotter import define_legend, save_plot, Plotter
 
-def analyse(sim_path:str, exp_path:str, grain_ids:list, strain_field:str, stress_field:str):
+def plot_results(sim_path:str, exp_path:str, grain_ids:list, strain_field:str, stress_field:str):
     """
-    Trains a surrogate model
+    Plots the simulation results
     
     Parameters:
     * `sim_path`:     Path that stores the simulation results
