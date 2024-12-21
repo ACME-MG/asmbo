@@ -144,7 +144,7 @@ class Plotter:
                 plt.plot([], [], color=self.colour_list[i], label=self.name_list[i], linewidth=2)
         plt.legend(framealpha=1, edgecolor="black", fancybox=True, facecolor="white")
 
-def define_legend(colour_list:list, label_list:list, type_list:list) -> None:
+def define_legend(colour_list:list, label_list:list, type_list:list, **kwargs) -> None:
     """
     Manually defines the plot legend
     
@@ -158,7 +158,7 @@ def define_legend(colour_list:list, label_list:list, type_list:list) -> None:
             plt.scatter([], [], color=colour_list[i], label=label_list[i], s=7**2)
         elif type_list[i] == "line":
             plt.plot([], [], color=colour_list[i], label=label_list[i], linewidth=2)
-    plt.legend(framealpha=1, edgecolor="black", fancybox=True, facecolor="white")
+    plt.legend(framealpha=1, edgecolor="black", fancybox=True, facecolor="white", **kwargs)
 
 def save_plot(file_path:str) -> None:
     """
