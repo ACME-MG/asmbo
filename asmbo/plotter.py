@@ -77,6 +77,5 @@ def plot_trajectories(exp_dict:dict, sim_dict:dict, grain_ids:list, sim_colour:s
     ipf.plot_ipf_trajectory([[st[0]] for st in sim_trajectories], direction, "scatter", {"color": sim_colour, "s": 6**2, "zorder": 3})
 
     # Save IPF
-    define_legend(["silver", sim_colour, "red"], ["Experimental", sim_label], ["scatter", "line"])
+    define_legend(["silver", sim_colour], ["Experimental", sim_label], ["scatter", "line"])
     save_plot(path)
-
