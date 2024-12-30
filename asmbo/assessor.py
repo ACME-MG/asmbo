@@ -6,17 +6,15 @@
 """
 
 # Libraries
-import math, numpy as np, os
+import math, numpy as np
 from asmbo.paths import MMS_PATH
 import sys; sys.path += [MMS_PATH]
 from asmbo.helper.analyse import get_stress, get_geodesics
 from asmbo.helper.surrogate import Model
 from asmbo.helper.io import csv_to_dict, dict_to_csv
 
-# Constants
-PARAM_NAMES = ["cp_lh_0", "cp_lh_1", "cp_tau_0", "cp_n", "cp_gamma_0"]
-
-def assess(params_list:list, sm_path:str, exp_path:str, max_strain:float, grain_ids:list) -> dict:
+def assess(params_list:list, sm_path:str, exp_path:str, max_strain:float, grain_ids:list,
+           param_names:list) -> dict:
     """
     Assesses the surrogate model using previously optimised simulation results
 
@@ -27,6 +25,7 @@ def assess(params_list:list, sm_path:str, exp_path:str, max_strain:float, grain_
     * `max_strain`:  Maximum strain to consider
     * `grain_ids`:   List of grain IDs to conduct the training
     * `sim_keyword`: Keyword to identify directories containing simulation results
+    * `param_names`: List of parameter names
 
     Returns a dictionary of the best parameters
     """
@@ -38,7 +37,7 @@ def assess(params_list:list, sm_path:str, exp_path:str, max_strain:float, grain_
     # Initialise other information
     exp_dict = csv_to_dict(exp_path)
     eval_strains = list(np.linspace(0, max_strain, 50))
-    fields = ["iteration"] + PARAM_NAMES + ["stress_error", "geodesic_error", "reduced_error"]
+    fields = ["iteration"] + param_names + ["stress_error", "geodesic_error", "reduced_error"]
     error_dict = dict(zip(fields, [[] for _ in range(len(fields))]))
 
     # Calculate the errors for each set of parameters
@@ -53,7 +52,7 @@ def assess(params_list:list, sm_path:str, exp_path:str, max_strain:float, grain_
         )
 
         # Evaluate the model's performance
-        param_values = [params_dict[param_name] for param_name in PARAM_NAMES]
+        param_values = [params_dict[param_name] for param_name in param_names]
         res_dict = model.get_response(param_values)
 
         # Calculate stress error
@@ -78,7 +77,7 @@ def assess(params_list:list, sm_path:str, exp_path:str, max_strain:float, grain_
 
         # Add information
         error_dict["iteration"].append(len(error_dict["iteration"])+1)
-        for param_name in PARAM_NAMES:
+        for param_name in param_names:
             error_dict[param_name].append(params_dict[param_name])
         error_dict["stress_error"].append(stress_error)
         error_dict["geodesic_error"].append(geodesic_error)

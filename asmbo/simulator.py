@@ -13,7 +13,7 @@ from asmbo.helper.io import csv_to_dict
 import math
 
 def simulate(sim_path:str, mesh_path:str, exp_path:str, param_names:list,
-             opt_params:list, num_processors:list, max_time:float):
+             opt_params:list, num_processors:list, max_time:float, mat_model:str):
     """
     Trains a surrogate model
     
@@ -25,6 +25,7 @@ def simulate(sim_path:str, mesh_path:str, exp_path:str, param_names:list,
     * `opt_params`:     List of optimised parameters
     * `num_processors`: Number of processors to use
     * `max_float`:      Maximum time to run the simulation before terminating
+    * `mat_model`:      Name of the material model
     """
     
     # Initialise interface
@@ -38,7 +39,7 @@ def simulate(sim_path:str, mesh_path:str, exp_path:str, param_names:list,
 
     # Defines the material parameters
     itf.define_material(
-        material_path   = "deer/cplh_ae",
+        material_path   = mat_model,
         material_params = dict(zip(param_names, opt_params)),
         c_11            = 250000,
         c_12            = 151000,

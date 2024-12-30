@@ -1,5 +1,5 @@
 """
- Title:         Main
+ Title:         Main for Voce hardening
  Description:   Adaptive surrogate model optimisation
  Author:        Janzen Choi
 
@@ -17,21 +17,36 @@ from asmbo.plotter import plot_results
 from asmbo.helper.general import safe_mkdir
 from asmbo.helper.io import csv_to_dict
 
-# Constants
+# Simulation constants
 MAX_SIM_TIME   = 20000
 NUM_ITERATIONS = 100
 STRAIN_FIELD   = "average_strain"
 STRESS_FIELD   = "average_stress"
 NUM_STRAINS    = 32
 NUM_PROCESSORS = 190
+
+# Grain IDs
 CAL_GRAIN_IDS  = [59, 63, 86, 237, 303]
 VAL_GRAIN_IDS  = [44, 53, 60, 78, 190]
-PARAM_NAMES    = ["cp_lh_0", "cp_lh_1", "cp_tau_0", "cp_n", "cp_gamma_0"]
-OPT_PARAMS     = [f"Param ({pn.replace('cp_','')})" for pn in PARAM_NAMES]
-MESH_PATH      = f"data/mesh"
-SAMPLE_PATH    = "data/sampled_data_0p1.csv"
-EXP_PATH       = "data/617_s3_40um_exp.csv"
-RESULTS_PATH   = "./results"
+
+# Model information
+PARAM_INFO = [
+    {"name": "cp_tau_s",   "bounds": (0,   1600)},
+    {"name": "cp_b",       "bounds": (0.5, 8)},
+    {"name": "cp_tau_0",   "bounds": (0,   400)},
+    {"name": "cp_n",       "bounds": (1,   16)},
+    {"name": "cp_gamma_0", "bounds": (0,   1e-4)},
+]
+PARAM_NAMES = [pi["name"] for pi in PARAM_INFO]
+OPT_PARAMS  = [f"Param ({pn})" for pn in PARAM_NAMES]
+OPT_MODEL   = "sm_617_s3_vh"
+SIM_MODEL   = "deer/cpvh_ae"
+
+# Paths
+MESH_PATH    = f"data/mesh"
+SAMPLE_PATH  = "data/sampled_vh_0p3.csv"
+EXP_PATH     = "data/617_s3_40um_exp.csv"
+RESULTS_PATH = "./results"
 
 def main():
     """
@@ -45,7 +60,9 @@ def main():
     params_dict_list = []
 
     # Define maximum strain
-    max_strain = 0.1
+    exp_dict = csv_to_dict(EXP_PATH)
+    max_strain = exp_dict["strain_intervals"][-1]
+    # max_strain = 0.1
 
     # Iterate
     for i in range(NUM_ITERATIONS):
@@ -66,13 +83,12 @@ def main():
             init_params = None
         else:
             init_params = assess(params_dict_list, train_path, EXP_PATH, max_strain, CAL_GRAIN_IDS)
-            init_params = {key.replace("cp_","") : value for key, value in init_params.items()}
 
         # 3) Optimise surrogate model
         progressor.progress("Optimising")
         opt_path = f"{get_prefix()}_i{i+1}_optimise"
         safe_mkdir(opt_path)
-        optimise(train_path, opt_path, EXP_PATH, max_strain, CAL_GRAIN_IDS, init_params)
+        optimise(train_path, opt_path, EXP_PATH, max_strain, CAL_GRAIN_IDS, PARAM_INFO, OPT_MODEL, init_params)
 
         # 4) Run CPFEM with optimised parameters
         progressor.progress("Validating")
@@ -80,7 +96,7 @@ def main():
         opt_dict = csv_to_dict(f"{opt_path}/params.csv")
         opt_params = [opt_dict[op][0] for op in OPT_PARAMS]
         safe_mkdir(sim_path)
-        simulate(sim_path, MESH_PATH, EXP_PATH, PARAM_NAMES, opt_params, NUM_PROCESSORS, MAX_SIM_TIME)
+        simulate(sim_path, MESH_PATH, EXP_PATH, PARAM_NAMES, opt_params, NUM_PROCESSORS, MAX_SIM_TIME, SIM_MODEL)
 
         # 5) Plot CPFEM simulation results
         progressor.progress("Plotting")

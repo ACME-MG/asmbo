@@ -16,7 +16,7 @@ from asmbo.helper.plotter import define_legend, save_plot
 from asmbo.helper.pole_figure import get_lattice, IPF
 
 def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain_ids:list,
-             init_params:dict=None):
+             param_info:list, model_name:str, init_params:dict=None):
     """
     Trains a surrogate model
     
@@ -26,6 +26,8 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
     * `exp_path`:    Path to the experimental data
     * `max_strain`:  Maximum strain to consider
     * `grain_ids`:   List of grain IDs to conduct the training
+    * `model_name`:  Name of the model in the optimiser module
+    * `param_info`:  Information about the parameters
     * `init_params`: Initial parameter values
     """
 
@@ -36,7 +38,7 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
 
     # Define mmodel
     itf.define_model(
-        model_name = f"sm_617_s3_lh2",
+        model_name = model_name,
         mms_path   = MMS_PATH,
         sm_path    = f"{train_path}/sm.pt",
         map_path   = f"{train_path}/map.csv",
@@ -45,15 +47,12 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
     
     # Initialise parameters
     if init_params != None:
-        for param_name in ["lh_0", "lh_1", "tau_0", "n", "gamma_0"]:
-            itf.init_param(param_name, init_params[param_name])
+        for pi in param_info:
+            itf.init_param(pi["name"], init_params[pi["name"]])
 
     # Bind parameters
-    itf.bind_param("lh_0",    0, 800)
-    itf.bind_param("lh_1",    0, 800)
-    itf.bind_param("tau_0",   0, 400)
-    itf.bind_param("n",       1, 16)
-    itf.bind_param("gamma_0", 0, 1e-4)
+    for pi in param_info:
+        itf.bind_param(pi["name"], pi["bounds"][0], pi["bounds"][1])
 
     # Read data
     itf.read_data(exp_path, thin_data=False)
