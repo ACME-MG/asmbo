@@ -82,7 +82,7 @@ def main():
         if params_dict_list == []:
             init_params = None
         else:
-            init_params = assess(params_dict_list, train_path, EXP_PATH, max_strain, CAL_GRAIN_IDS)
+            init_params = assess(params_dict_list, train_path, EXP_PATH, max_strain, CAL_GRAIN_IDS, PARAM_NAMES)
 
         # 3) Optimise surrogate model
         progressor.progress("Optimising")
