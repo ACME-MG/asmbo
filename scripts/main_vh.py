@@ -31,11 +31,11 @@ VAL_GRAIN_IDS  = [44, 53, 60, 78, 190]
 
 # Model information
 PARAM_INFO = [
-    {"name": "cp_tau_s",   "bounds": (0,   1600)},
-    {"name": "cp_b",       "bounds": (0.5, 8)},
-    {"name": "cp_tau_0",   "bounds": (0,   400)},
-    {"name": "cp_n",       "bounds": (1,   16)},
-    {"name": "cp_gamma_0", "bounds": (0,   1e-4)},
+    {"name": "cp_tau_s",   "bounds": (0,    1600)},
+    {"name": "cp_b",       "bounds": (0.5,  8)},
+    {"name": "cp_tau_0",   "bounds": (0,    400)},
+    {"name": "cp_n",       "bounds": (1,    16)},
+    {"name": "cp_gamma_0", "bounds": (1e-5, 1e-4)},
 ]
 PARAM_NAMES = [pi["name"] for pi in PARAM_INFO]
 OPT_PARAMS  = [f"Param ({pn})" for pn in PARAM_NAMES]
