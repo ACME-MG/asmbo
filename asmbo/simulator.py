@@ -38,6 +38,8 @@ def simulate(sim_path:str, mesh_path:str, exp_path:str, param_names:list,
     dimensions = itf.get_dimensions()
 
     # Defines the material parameters
+    param_dict = dict(zip(param_names, opt_params))
+    param_dict["cp_b"] = 3.25e-5
     itf.define_material(
         material_path   = mat_model,
         material_params = dict(zip(param_names, opt_params)),

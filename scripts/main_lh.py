@@ -31,12 +31,12 @@ VAL_GRAIN_IDS  = [44, 53, 60, 78, 190]
 
 # Model information
 PARAM_INFO = [
-    {"name": "cp_lh_0",    "bounds": (0, 800)},
-    {"name": "cp_lh_1",    "bounds": (0, 800)},
-    {"name": "cp_tau_0",   "bounds": (0, 400)},
-    {"name": "cp_n",       "bounds": (1, 16)},
-    {"name": "cp_gamma_0", "bounds": (0, 1e-4)},
+    {"name": "cp_lh_0",    "bounds": (0, 1000)},
+    {"name": "cp_lh_1",    "bounds": (0, 1000)},
+    {"name": "cp_tau_0",   "bounds": (0, 500)},
+    {"name": "cp_n",       "bounds": (1, 20)},
 ]
+
 PARAM_NAMES = [pi["name"] for pi in PARAM_INFO]
 OPT_PARAMS  = [f"Param ({pn})" for pn in PARAM_NAMES]
 OPT_MODEL   = "sm_617_s3_vh"
