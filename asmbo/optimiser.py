@@ -49,7 +49,6 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
     if init_params != None:
         for pi in param_info:
             itf.init_param(pi["name"], init_params[pi["name"]])
-    itf.fix_param("cp_gamma_0", 3.25e-5)
 
     # Bind parameters
     for pi in param_info:
