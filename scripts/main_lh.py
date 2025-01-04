@@ -111,6 +111,8 @@ def main():
         progressor.progress("Adding")
         combined_dict = {}
         for key in train_dict.keys():
+            if not key in sim_dict.keys():
+                continue
             if key in PARAM_NAMES:
                 combined_dict[key] = train_dict[key] + [sim_dict[key]]*NUM_STRAINS
             else:
