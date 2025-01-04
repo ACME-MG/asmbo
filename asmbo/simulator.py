@@ -42,7 +42,7 @@ def simulate(sim_path:str, mesh_path:str, exp_path:str, param_names:list,
     param_dict["cp_gamma_0"] = 3.25e-5
     itf.define_material(
         material_path   = mat_model,
-        material_params = dict(zip(param_names, opt_params)),
+        material_params = param_dict,
         c_11            = 250000,
         c_12            = 151000,
         c_44            = 123000,
