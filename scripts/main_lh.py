@@ -39,7 +39,7 @@ PARAM_INFO = [
 
 PARAM_NAMES = [pi["name"] for pi in PARAM_INFO]
 OPT_PARAMS  = [f"Param ({pn})" for pn in PARAM_NAMES]
-OPT_MODEL   = "sm_617_s3_lh"
+OPT_MODEL   = "sm_617_s3_lh2"
 SIM_MODEL   = "deer/cplh_ae"
 
 # Paths
