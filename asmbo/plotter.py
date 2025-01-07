@@ -6,6 +6,7 @@
 """
 
 # Libraries
+import matplotlib.pyplot as plt
 from asmbo.helper.io import csv_to_dict
 from asmbo.helper.general import transpose
 from asmbo.helper.pole_figure import get_lattice, IPF
@@ -61,6 +62,7 @@ def plot_trajectories(exp_dict:dict, sim_dict:dict, grain_ids:list, sim_colour:s
     ipf = IPF(get_lattice("fcc"))
     direction = [1,0,0]
     get_trajectories = lambda dict : [transpose([dict[f"g{grain_id}_{phi}"] for phi in ["phi_1", "Phi", "phi_2"]]) for grain_id in grain_ids]
+    plt.figure(figsize=(5, 4), dpi=300)
 
     # Plot experimental reorientation trajectories
     exp_trajectories = get_trajectories(exp_dict)
