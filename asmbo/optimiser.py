@@ -101,7 +101,7 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
         ipf.plot_ipf_trajectory([[st[0]] for st in sim_trajectories], direction, "scatter", {"color": "green", "s": 6**2, "zorder": 3})
         
         # Save plot
-        define_legend(["silver", "green"], ["Experimental", "Simulation"], ["scatter", "line"])
+        define_legend(["silver", "green"], ["Experiment", "Simulation"], ["scatter", "line"])
         save_plot(f"{output_path}/plot_rt.png")
 
     # Record plots

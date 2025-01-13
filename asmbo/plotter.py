@@ -39,7 +39,7 @@ def plot_results(sim_path:str, exp_path:str, cal_grain_ids:list,
     res_dict["stress"] = res_dict[stress_field]
     plotter = Plotter("strain", "stress", "mm/mm", "MPa")
     plotter.prep_plot()
-    plotter.scat_plot(exp_dict, "silver", "Experimental")
+    plotter.scat_plot(exp_dict, "silver", "Experiment")
     plotter.line_plot(res_dict, "green", "Calibration")
     plotter.set_legend()
     save_plot(f"{sim_path}/plot_opt_ss.png")
@@ -62,7 +62,6 @@ def plot_trajectories(exp_dict:dict, sim_dict:dict, grain_ids:list, sim_colour:s
     ipf = IPF(get_lattice("fcc"))
     direction = [1,0,0]
     get_trajectories = lambda dict : [transpose([dict[f"g{grain_id}_{phi}"] for phi in ["phi_1", "Phi", "phi_2"]]) for grain_id in grain_ids]
-    plt.figure(figsize=(5, 4), dpi=300)
 
     # Plot experimental reorientation trajectories
     exp_trajectories = get_trajectories(exp_dict)
@@ -79,5 +78,5 @@ def plot_trajectories(exp_dict:dict, sim_dict:dict, grain_ids:list, sim_colour:s
     ipf.plot_ipf_trajectory([[st[0]] for st in sim_trajectories], direction, "scatter", {"color": sim_colour, "s": 6**2, "zorder": 3})
 
     # Save IPF
-    define_legend(["silver", sim_colour], ["Experimental", sim_label], ["scatter", "line"])
+    define_legend(["silver", sim_colour], ["Experiment", sim_label], ["scatter", "line"])
     save_plot(path)
