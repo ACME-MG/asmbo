@@ -44,7 +44,7 @@ SIM_MODEL   = "deer/cpvh_ae"
 
 # Paths
 MESH_PATH    = f"data/mesh"
-SAMPLE_PATH  = "data/sampled_vh_sm16.csv"
+SAMPLE_PATH  = "data/sampled_vh_sm6.csv"
 EXP_PATH     = "data/617_s3_40um_exp.csv"
 RESULTS_PATH = "./results"
 
