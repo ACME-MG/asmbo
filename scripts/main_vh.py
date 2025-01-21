@@ -37,7 +37,6 @@ PARAM_INFO = [
     {"name": "cp_tau_0", "bounds": (0, 500)},
     {"name": "cp_n",     "bounds": (1, 20)},
 ]
-
 PARAM_NAMES = [pi["name"] for pi in PARAM_INFO]
 OPT_PARAMS  = [f"Param ({pn})" for pn in PARAM_NAMES]
 OPT_MODEL   = "sm_617_s3_vh"
@@ -45,7 +44,7 @@ SIM_MODEL   = "deer/cpvh_ae"
 
 # Paths
 MESH_PATH    = f"data/mesh"
-SAMPLE_PATH  = "data/sampled_vh_sm4.csv"
+SAMPLE_PATH  = "data/sampled_vh_sm16.csv"
 EXP_PATH     = "data/617_s3_40um_exp.csv"
 RESULTS_PATH = "./results"
 
