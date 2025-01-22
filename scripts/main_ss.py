@@ -72,7 +72,7 @@ def main():
    
         # Initialise
         param_vals = [param_dict[pn] for pn in PARAM_NAMES]
-        sim_path = f"{get_prefix()}_i1_initial_{i}"
+        sim_path = f"{get_prefix()}_i1_initial_{i+1}"
         safe_mkdir(sim_path)
         
         # Simulate, plot, and process
