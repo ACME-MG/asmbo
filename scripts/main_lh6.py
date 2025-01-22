@@ -114,15 +114,7 @@ def main():
         
         # 7) Add to training dictionary
         progressor.progress("Adding")
-        combined_dict = {}
-        for key in train_dict.keys():
-            if not key in sim_dict.keys():
-                continue
-            if key in PARAM_NAMES:
-                combined_dict[key] = train_dict[key] + [sim_dict[key]]*NUM_STRAINS
-            else:
-                combined_dict[key] = train_dict[key] + sim_dict[key]
-        train_dict = combined_dict
+        train_dict = update_train_dict(train_dict, sim_dict)
         params_dict_list.append(sim_params)
 
 # Progress updater class
@@ -138,6 +130,26 @@ class Progresser:
         print("="*len(message))
         print("")
         self.step += 1
+
+def update_train_dict(train_dict:dict, sim_dict:dict) -> dict:
+    """
+    Updates the training dictionary
+
+    Parameters:
+    * `train_dict`: The current training dictionary
+    * `sim_dict`:   The dictionary to add
+
+    Returns the combined dictionary
+    """
+    combined_dict = {}
+    for key in train_dict.keys():
+        if not key in sim_dict.keys():
+            continue
+        if key in PARAM_NAMES:
+            combined_dict[key] = train_dict[key] + [sim_dict[key]]*NUM_STRAINS
+        else:
+            combined_dict[key] = train_dict[key] + sim_dict[key]
+    return combined_dict
 
 def read_params(params_path:str) -> dict:
     """

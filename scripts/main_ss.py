@@ -1,5 +1,5 @@
 """
- Title:         Main for Voce hardening
+ Title:         Main for sensitivity study with Voce hardening
  Description:   Adaptive surrogate model optimisation
  Author:        Janzen Choi
 
@@ -16,6 +16,7 @@ from asmbo.simulator import simulate
 from asmbo.plotter import plot_results
 from asmbo.helper.general import safe_mkdir
 from asmbo.helper.io import csv_to_dict
+from asmbo.helper.sampler import get_lhs
 
 # Simulation constants
 MAX_SIM_TIME   = 20000
@@ -44,7 +45,6 @@ SIM_MODEL   = "deer/cpvh_ae"
 
 # Paths
 MESH_PATH    = f"data/mesh"
-SAMPLE_PATH  = "data/sampled_vh_sm6.csv"
 EXP_PATH     = "data/617_s3_40um_exp.csv"
 RESULTS_PATH = "./results"
 
@@ -52,17 +52,39 @@ def main():
     """
     Main function
     """
-
+    
     # Initialise
     get_prefix = lambda : f"{RESULTS_PATH}/" + time.strftime("%y%m%d%H%M%S", time.localtime(time.time()))
-    train_dict = csv_to_dict(SAMPLE_PATH)
     safe_mkdir(RESULTS_PATH)
     params_dict_list = []
 
     # Define maximum strain
     exp_dict = csv_to_dict(EXP_PATH)
     max_strain = exp_dict["strain_intervals"][-1]
-    # max_strain = 0.1
+
+    # Sample parameter space
+    num_params = int(sys.argv[1])
+    param_info_dict = dict(zip([pi["name"] for pi in PARAM_INFO], [pi["bounds"] for pi in PARAM_INFO]))
+    param_dict_list = get_lhs(param_info_dict, num_params)
+
+    # Run model with sampled parameters
+    for i, param_dict in enumerate(param_dict_list):
+   
+        # Initialise
+        param_vals = [param_dict[pn] for pn in PARAM_NAMES]
+        sim_path = f"{get_prefix()}_i1_initial_{i}"
+        safe_mkdir(sim_path)
+        
+        # Simulate, plot, and process
+        simulate(sim_path, MESH_PATH, EXP_PATH, PARAM_NAMES, param_vals, NUM_PROCESSORS, MAX_SIM_TIME, SIM_MODEL)
+        plot_results(sim_path, EXP_PATH, CAL_GRAIN_IDS, VAL_GRAIN_IDS, STRAIN_FIELD, STRESS_FIELD)
+        sim_dict = process(sim_path, PARAM_NAMES, STRAIN_FIELD, STRESS_FIELD, NUM_STRAINS, max_strain)
+
+        # Update training dictionary
+        if i == 0:
+            train_dict = sim_dict
+        else:
+            train_dict = update_train_dict(train_dict, sim_dict)
 
     # Iterate
     for i in range(NUM_ITERATIONS):
@@ -112,20 +134,6 @@ def main():
         train_dict = update_train_dict(train_dict, sim_dict)
         params_dict_list.append(sim_params)
 
-# Progress updater class
-class Progresser:
-    def __init__(self, iteration:int):
-        self.iteration = iteration
-        self.step = 1
-    def progress(self, verb:str):
-        message = f"===== {self.iteration}.{self.step}: {verb} ====="
-        print("")
-        print("="*len(message))
-        print(message)
-        print("="*len(message))
-        print("")
-        self.step += 1
-
 def update_train_dict(train_dict:dict, sim_dict:dict) -> dict:
     """
     Updates the training dictionary
@@ -145,6 +153,20 @@ def update_train_dict(train_dict:dict, sim_dict:dict) -> dict:
         else:
             combined_dict[key] = train_dict[key] + sim_dict[key]
     return combined_dict
+
+# Progress updater class
+class Progresser:
+    def __init__(self, iteration:int):
+        self.iteration = iteration
+        self.step = 1
+    def progress(self, verb:str):
+        message = f"===== {self.iteration}.{self.step}: {verb} ====="
+        print("")
+        print("="*len(message))
+        print(message)
+        print("="*len(message))
+        print("")
+        self.step += 1
 
 def read_params(params_path:str) -> dict:
     """
