@@ -82,7 +82,12 @@ def main():
 
         # Update training dictionary
         if i == 0:
-            train_dict = sim_dict
+            train_dict = {}
+            for key in sim_dict.keys():
+                if key in PARAM_NAMES:
+                    train_dict[key] = [sim_dict[key]]*NUM_STRAINS
+                else:
+                    train_dict[key] = sim_dict[key]
         else:
             train_dict = update_train_dict(train_dict, sim_dict)
 
