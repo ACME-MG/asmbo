@@ -17,6 +17,7 @@ from asmbo.plotter import plot_results
 from asmbo.helper.general import safe_mkdir
 from asmbo.helper.io import csv_to_dict
 from asmbo.helper.sampler import get_lhs
+from model_info import get_model_info
 
 # Simulation constants
 MAX_SIM_TIME   = 20000
@@ -31,16 +32,9 @@ CAL_GRAIN_IDS = [51, 56, 72, 80, 126, 223, 237, 262]
 VAL_GRAIN_IDS = [44, 60, 78, 86, 178, 190, 207, 244]
 
 # Model information
-PARAM_INFO = [
-    {"name": "cp_tau_s", "bounds": (0, 2000)},
-    {"name": "cp_b",     "bounds": (0, 20)},
-    {"name": "cp_tau_0", "bounds": (0, 500)},
-    {"name": "cp_n",     "bounds": (1, 20)},
-]
+PARAM_INFO, OPT_MODEL, SIM_MODEL = get_model_info(str(sys.argv[1]))
 PARAM_NAMES = [pi["name"] for pi in PARAM_INFO]
 OPT_PARAMS  = [f"Param ({pn})" for pn in PARAM_NAMES]
-OPT_MODEL   = "sm_617_s3_vh"
-SIM_MODEL   = "deer/cpvh_ae"
 
 # Paths
 MESH_PATH    = f"data/mesh"
@@ -62,7 +56,7 @@ def main():
     max_strain = exp_dict["strain_intervals"][-1]
 
     # Sample parameter space
-    num_params = int(sys.argv[1])
+    num_params = int(sys.argv[2])
     param_info_dict = dict(zip([pi["name"] for pi in PARAM_INFO], [pi["bounds"] for pi in PARAM_INFO]))
     param_dict_list = get_lhs(param_info_dict, num_params)
 
