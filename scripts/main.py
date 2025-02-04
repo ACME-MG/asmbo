@@ -17,7 +17,7 @@ from asmbo.plotter import plot_results
 from asmbo.helper.general import safe_mkdir
 from asmbo.helper.io import csv_to_dict
 from asmbo.helper.sampler import get_lhs
-from model_info import get_model_info
+from asmbo.model_info import get_model_info
 
 # Simulation constants
 MAX_SIM_TIME   = 20000
