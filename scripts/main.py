@@ -29,7 +29,7 @@ NUM_PROCESSORS = 190
 
 # Grain IDs
 CAL_GRAIN_IDS = [51, 56, 72, 80, 126, 223, 237, 262]
-VAL_GRAIN_IDS = [44, 60, 78, 86, 178, 190, 207, 244]
+VAL_GRAIN_IDS = [44, 50, 60, 178, 190, 207, 278, 299]
 
 # Model information
 PARAM_INFO, OPT_MODEL, SIM_MODEL = get_model_info(str(sys.argv[1]))
