@@ -100,6 +100,7 @@ def main():
         # Add results from previous simulations
         sim_dict_list = [csv_to_dict(f"{dir_path}/summary.csv") for dir_path in dir_path_list]
         params_dict_list = [read_params(f"{dir_path}/params.txt") for dir_path in dir_path_list]
+        sim_dict_list = [{**params_dict, **sim_dict} for sim_dict, params_dict in zip(sim_dict_list, params_dict_list)]
 
         # Print
         num_init = len(init_dir_path_list)
