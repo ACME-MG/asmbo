@@ -7,7 +7,7 @@
 
 # Libraries
 import sys; sys.path += [".."]
-import time
+import time, os
 from asmbo.assessor import assess
 from asmbo.processer import process
 from asmbo.trainer import train
@@ -18,6 +18,10 @@ from asmbo.helper.general import safe_mkdir
 from asmbo.helper.io import csv_to_dict
 from asmbo.helper.sampler import get_lhs
 from asmbo.model_info import get_model_info
+
+# Command line arguments
+MODEL_NAME = str(sys.argv[1]) # VH, LH2, or LH6
+NUM_PARAMS = int(sys.argv[2]) # for sampling; if 0, tries to resume from results folder
 
 # Simulation constants
 MAX_SIM_TIME   = 20000
@@ -49,31 +53,62 @@ def main():
     # Initialise
     get_prefix = lambda : f"{RESULTS_PATH}/" + time.strftime("%y%m%d%H%M%S", time.localtime(time.time()))
     safe_mkdir(RESULTS_PATH)
-    params_dict_list = []
-
-    # Define maximum strain
     exp_dict = csv_to_dict(EXP_PATH)
     max_strain = exp_dict["strain_intervals"][-1]
+    offset = 0
 
-    # Sample parameter space
-    num_params = int(sys.argv[2])
-    param_info_dict = dict(zip([pi["name"] for pi in PARAM_INFO], [pi["bounds"] for pi in PARAM_INFO]))
-    param_dict_list = get_lhs(param_info_dict, num_params)
-
-    # Run model with sampled parameters
-    for i, param_dict in enumerate(param_dict_list):
-   
-        # Initialise
-        param_vals = [param_dict[pn] for pn in PARAM_NAMES]
-        sim_path = f"{get_prefix()}_i1_initial_{i+1}"
-        safe_mkdir(sim_path)
+    # If starting new workflow
+    if NUM_PARAMS > 0:
         
-        # Simulate, plot, and process
-        simulate(sim_path, MESH_PATH, EXP_PATH, PARAM_NAMES, param_vals, NUM_PROCESSORS, MAX_SIM_TIME, SIM_MODEL)
-        plot_results(sim_path, EXP_PATH, CAL_GRAIN_IDS, VAL_GRAIN_IDS, STRAIN_FIELD, STRESS_FIELD)
-        sim_dict = process(sim_path, PARAM_NAMES, STRAIN_FIELD, STRESS_FIELD, NUM_STRAINS, max_strain)
+        # Print
+        print(f"Starting adaptive calibration workflow ({MODEL_NAME}, {NUM_PARAMS})")
 
-        # Update training dictionary
+        # Initialise simulation results and parameters
+        sim_dict_list = []
+        params_dict_list = []
+
+        # Sample parameter space
+        param_info_dict = dict(zip([pi["name"] for pi in PARAM_INFO], [pi["bounds"] for pi in PARAM_INFO]))
+        param_dict_list = get_lhs(param_info_dict, NUM_PARAMS)
+
+        # Run model with sampled parameters
+        for i, param_dict in enumerate(param_dict_list):
+    
+            # Initialise
+            param_vals = [param_dict[pn] for pn in PARAM_NAMES]
+            sim_path = f"{get_prefix()}_i1_initial_{i+1}"
+            safe_mkdir(sim_path)
+            
+            # Simulate, plot, and process
+            simulate(sim_path, MESH_PATH, EXP_PATH, PARAM_NAMES, param_vals, NUM_PROCESSORS, MAX_SIM_TIME, SIM_MODEL)
+            plot_results(sim_path, EXP_PATH, CAL_GRAIN_IDS, VAL_GRAIN_IDS, STRAIN_FIELD, STRESS_FIELD)
+            sim_dict = process(sim_path, PARAM_NAMES, STRAIN_FIELD, STRESS_FIELD, NUM_STRAINS, max_strain)
+            sim_dict_list.append(sim_dict)
+
+            # Add parameters
+            sim_params = read_params(f"{sim_path}/params.txt")
+            params_dict_list.append(sim_params)
+
+    # Otherwise, read simulations from results folder
+    else:
+        
+        # Identify paths
+        init_dir_path_list = [f"{RESULTS_PATH}/{dir_path}" for dir_path in os.listdir(RESULTS_PATH) if "initial" in dir_path]
+        sim_dir_path_list = [f"{RESULTS_PATH}/{dir_path}" for dir_path in os.listdir(RESULTS_PATH) if "simulate" in dir_path]
+        dir_path_list = init_dir_path_list + sim_dir_path_list
+
+        # Add results from previous simulations
+        sim_dict_list = [csv_to_dict(f"{dir_path}/summary.csv") for dir_path in dir_path_list]
+        params_dict_list = [read_params(f"{dir_path}/params.txt") for dir_path in dir_path_list]
+
+        # Print
+        num_init = len(init_dir_path_list)
+        num_sim = len(sim_dir_path_list)
+        offset = num_sim
+        print(f"Resuming adaptive calibration workflow ({MODEL_NAME}, {num_init}+{num_sim})")
+
+    # Add simulation results to training dictionary
+    for i, sim_dict in enumerate(sim_dict_list):
         if i == 0:
             train_dict = {}
             for key in sim_dict.keys():
@@ -85,7 +120,7 @@ def main():
             train_dict = update_train_dict(train_dict, sim_dict)
 
     # Iterate
-    for i in range(NUM_ITERATIONS):
+    for i in range(offset,NUM_ITERATIONS+offset):
 
         # Initialise
         progressor = Progresser(i+1)
