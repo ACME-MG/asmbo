@@ -41,7 +41,8 @@ PARAM_NAMES = [pi["name"] for pi in PARAM_INFO]
 OPT_PARAMS  = [f"Param ({pn})" for pn in PARAM_NAMES]
 
 # Paths
-MESH_PATH    = f"data/mesh"
+# MESH_PATH    = f"data/mesh"
+MESH_PATH    = f"data/mesh_pinned"
 EXP_PATH     = "data/617_s3_40um_exp.csv"
 RESULTS_PATH = "./results"
 
@@ -137,10 +138,7 @@ def main():
 
         # 2) Assesses the surrogate model on previously optimised parameters
         progressor.progress("Assessing")
-        if params_dict_list == []:
-            init_params = None
-        else:
-            init_params = assess(params_dict_list, train_path, EXP_PATH, max_strain, CAL_GRAIN_IDS, PARAM_NAMES)
+        init_params = assess(params_dict_list, train_path, EXP_PATH, max_strain, CAL_GRAIN_IDS, PARAM_NAMES)
 
         # 3) Optimise surrogate model
         progressor.progress("Optimising")
