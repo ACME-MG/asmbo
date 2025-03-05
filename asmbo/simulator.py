@@ -52,7 +52,7 @@ def simulate(sim_path:str, mesh_path:str, exp_path:str, param_names:list,
     exp_dict = csv_to_dict(exp_path)
     eng_strain = math.exp(exp_dict["strain_intervals"][-1])-1
     itf.define_simulation(
-        simulation_path = "deer/1to1_ui_cp",
+        simulation_path = "deer/1to1_ui_cp_pin2",
         end_time        = exp_dict["time_intervals"][-1],
         end_strain      = eng_strain*dimensions["x"]
     )

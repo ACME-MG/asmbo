@@ -36,7 +36,7 @@ CAL_GRAIN_IDS = [51, 56, 72, 80, 126, 223, 237, 262]
 VAL_GRAIN_IDS = [44, 50, 60, 178, 190, 207, 278, 299]
 
 # Model information
-PARAM_INFO, OPT_MODEL, SIM_MODEL = get_model_info(str(sys.argv[1]))
+PARAM_INFO, OPT_MODEL, SIM_MODEL = get_model_info(MODEL_NAME)
 PARAM_NAMES = [pi["name"] for pi in PARAM_INFO]
 OPT_PARAMS  = [f"Param ({pn})" for pn in PARAM_NAMES]
 
