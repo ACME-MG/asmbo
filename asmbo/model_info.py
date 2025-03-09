@@ -8,7 +8,7 @@
 # VH information
 VH_PARAM_INFO = [
     {"name": "cp_tau_s", "bounds": (0, 2000)},
-    {"name": "cp_b",     "bounds": (0, 20)},
+    {"name": "cp_b",     "bounds": (0, 10)},
     {"name": "cp_tau_0", "bounds": (0, 500)},
     {"name": "cp_n",     "bounds": (1, 20)},
 ]
