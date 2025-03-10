@@ -7,9 +7,12 @@
 
 # VH information
 VH_PARAM_INFO = [
-    {"name": "cp_tau_s", "bounds": (0, 2000)},
-    {"name": "cp_b",     "bounds": (0, 10)},
-    {"name": "cp_tau_0", "bounds": (0, 500)},
+    # {"name": "cp_tau_s", "bounds": (0, 2000)},
+    # {"name": "cp_b",     "bounds": (0, 10)},
+    # {"name": "cp_tau_0", "bounds": (0, 500)},
+    {"name": "cp_tau_s", "bounds": (0, 4000)},
+    {"name": "cp_b",     "bounds": (0, 20)},
+    {"name": "cp_tau_0", "bounds": (0, 1000)},
     {"name": "cp_n",     "bounds": (1, 20)},
 ]
 VH_OPT_MODEL   = "sm_617_s3_vh"
