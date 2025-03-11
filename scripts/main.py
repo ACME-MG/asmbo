@@ -21,7 +21,7 @@ from asmbo.model_info import get_model_info
 
 # Command line arguments
 MODEL_NAME = str(sys.argv[1]) # VH, LH2, or LH6
-NUM_PARAMS = int(sys.argv[2]) # for sampling; if 0, tries to resume from results folder
+NUM_PARAMS = int(sys.argv[2]) # number of samples; if 0, tries to resume from results folder
 
 # Simulation constants
 MAX_SIM_TIME   = 20000
