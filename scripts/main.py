@@ -32,8 +32,6 @@ NUM_STRAINS    = 32
 NUM_PROCESSORS = 190
 
 # Grain IDs
-# CAL_GRAIN_IDS = [60, 79, 178, 189, 190, 215, 237, 278] # pin2
-# VAL_GRAIN_IDS = [14, 56, 72, 101, 223, 255, 262, 299]
 CAL_GRAIN_IDS = [51, 56, 72, 80, 126, 223, 237, 262]
 VAL_GRAIN_IDS = [44, 50, 60, 178, 190, 207, 278, 299]
 
@@ -43,8 +41,7 @@ PARAM_NAMES = [pi["name"] for pi in PARAM_INFO]
 OPT_PARAMS  = [f"Param ({pn})" for pn in PARAM_NAMES]
 
 # Paths
-# MESH_PATH    = f"data/mesh"
-MESH_PATH    = f"data/mesh_pinned"
+MESH_PATH    = f"data/mesh_sbc"
 EXP_PATH     = "data/617_s3_40um_exp.csv"
 RESULTS_PATH = "./results"
 
