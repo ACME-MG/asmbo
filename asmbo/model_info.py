@@ -16,7 +16,7 @@ VH_PARAM_INFO = [
     {"name": "cp_n",     "bounds": (1, 20)},
 ]
 VH_OPT_MODEL   = "sm_617_s3_vh"
-VH_SIM_MODEL   = "deer/cpvh_ae"
+VH_MAT_MODEL   = "deer/cpvh_ae"
 
 # LH2 information
 LH2_PARAM_INFO = [
@@ -26,7 +26,7 @@ LH2_PARAM_INFO = [
     {"name": "cp_n",     "bounds": (1, 20)},
 ]
 LH2_OPT_MODEL   = "sm_617_s3_lh2"
-LH2_SIM_MODEL   = "deer/cplh_ae"
+LH2_MAT_MODEL   = "deer/cplh_ae"
 
 # LH6 information
 LH6_PARAM_INFO = [
@@ -40,7 +40,7 @@ LH6_PARAM_INFO = [
     {"name": "cp_n",     "bounds": (1, 20)},
 ]
 LH6_OPT_MODEL   = "sm_617_s3_lh6"
-LH6_SIM_MODEL   = "deer/cplh6_ae"
+LH6_MAT_MODEL   = "deer/cplh6_ae"
 
 def get_model_info(model_name:str) -> tuple:
     """
@@ -53,8 +53,8 @@ def get_model_info(model_name:str) -> tuple:
     and simulation model, as a tuple
     """
     if model_name == "vh":
-        return VH_PARAM_INFO, VH_OPT_MODEL, VH_SIM_MODEL
+        return VH_PARAM_INFO, VH_OPT_MODEL, VH_MAT_MODEL
     elif model_name == "lh2":
-        return LH2_PARAM_INFO, LH2_OPT_MODEL, LH2_SIM_MODEL
+        return LH2_PARAM_INFO, LH2_OPT_MODEL, LH2_MAT_MODEL
     elif model_name == "lh6":
-        return LH6_PARAM_INFO, LH6_OPT_MODEL, LH6_SIM_MODEL
+        return LH6_PARAM_INFO, LH6_OPT_MODEL, LH6_MAT_MODEL

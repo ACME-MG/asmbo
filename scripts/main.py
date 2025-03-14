@@ -36,12 +36,13 @@ CAL_GRAIN_IDS = [51, 56, 72, 80, 126, 223, 237, 262]
 VAL_GRAIN_IDS = [44, 50, 60, 178, 190, 207, 278, 299]
 
 # Model information
-PARAM_INFO, OPT_MODEL, SIM_MODEL = get_model_info(MODEL_NAME)
+PARAM_INFO, OPT_MODEL, MAT_MODEL = get_model_info(MODEL_NAME)
 PARAM_NAMES = [pi["name"] for pi in PARAM_INFO]
 OPT_PARAMS  = [f"Param ({pn})" for pn in PARAM_NAMES]
+SIM_MODEL   = "deer/1to1_ui_cp_xy"
 
 # Paths
-MESH_PATH    = f"data/mesh_sbc"
+MESH_PATH    = f"data/40um"
 EXP_PATH     = "data/617_s3_40um_exp.csv"
 RESULTS_PATH = "./results"
 
@@ -80,7 +81,7 @@ def main():
             safe_mkdir(sim_path)
             
             # Simulate, plot, and process
-            simulate(sim_path, MESH_PATH, EXP_PATH, PARAM_NAMES, param_vals, NUM_PROCESSORS, MAX_SIM_TIME, SIM_MODEL)
+            simulate(sim_path, MESH_PATH, EXP_PATH, PARAM_NAMES, param_vals, NUM_PROCESSORS, MAX_SIM_TIME, MAT_MODEL, SIM_MODEL)
             plot_results(sim_path, EXP_PATH, CAL_GRAIN_IDS, VAL_GRAIN_IDS, STRAIN_FIELD, STRESS_FIELD)
             sim_dict = process(sim_path, PARAM_NAMES, STRAIN_FIELD, STRESS_FIELD, NUM_STRAINS, max_strain)
             sim_dict_list.append(sim_dict)
