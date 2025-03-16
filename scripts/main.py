@@ -152,7 +152,7 @@ def main():
         opt_dict = csv_to_dict(f"{opt_path}/params.csv")
         opt_params = [opt_dict[op][0] for op in OPT_PARAMS]
         safe_mkdir(sim_path)
-        simulate(sim_path, MESH_PATH, EXP_PATH, PARAM_NAMES, opt_params, NUM_PROCESSORS, MAX_SIM_TIME, SIM_MODEL)
+        simulate(sim_path, MESH_PATH, EXP_PATH, PARAM_NAMES, opt_params, NUM_PROCESSORS, MAX_SIM_TIME, MAT_MODEL, SIM_MODEL)
 
         # 5) Plot CPFEM simulation results
         progressor.progress("Plotting")
