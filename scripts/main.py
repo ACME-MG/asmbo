@@ -29,7 +29,7 @@ NUM_ITERATIONS = 100
 STRAIN_FIELD   = "average_strain"
 STRESS_FIELD   = "average_stress"
 NUM_STRAINS    = 32
-NUM_PROCESSORS = 190
+NUM_PROCESSORS = 45
 
 # Grain IDs
 # CAL_GRAIN_IDS = [14, 72, 95, 101, 207, 240, 262, 287]
