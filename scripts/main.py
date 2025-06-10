@@ -22,6 +22,7 @@ from asmbo.model_info import get_model_info
 # Command line arguments
 MODEL_NAME = str(sys.argv[1]) # VH, LH2, or LH6
 NUM_PARAMS = int(sys.argv[2]) # number of samples; if 0, tries to resume from results folder
+RESULTS_PATH = str(sys.argv[3]) if len(sys.argv) > 2 else "./results"
 
 # Simulation constants
 MAX_SIM_TIME   = 20000
@@ -44,9 +45,8 @@ OPT_PARAMS  = [f"Param ({pn})" for pn in PARAM_NAMES]
 SIM_MODEL   = "deer/1to1_ui_cp_x"
 
 # Paths
-MESH_PATH    = f"data/40um"
-EXP_PATH     = "data/617_s3_40um_exp.csv"
-RESULTS_PATH = "./results"
+MESH_PATH = f"data/40um"
+EXP_PATH  = "data/617_s3_40um_exp.csv"
 
 def main():
     """
