@@ -47,7 +47,7 @@ def train(train_dict:dict, train_path:str, param_names:list, grain_ids:list,
         itf.add_output(output, ["log", "linear"])
 
     # Train surrogate model
-    itf.set_num_threads(4)
+    itf.set_num_threads(num_threads)
     itf.define_surrogate("kfold_2", "cpu", num_splits=5, epochs=1000, batch_size=32, verbose=True)
     itf.add_training_data()
     itf.train()
