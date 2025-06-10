@@ -136,7 +136,7 @@ def main():
         progressor.progress("Training")
         train_path = f"{get_prefix()}_i{i+1}_surrogate"
         safe_mkdir(train_path)
-        train(train_dict, train_path, PARAM_NAMES, CAL_GRAIN_IDS, STRAIN_FIELD, STRESS_FIELD)
+        train(train_dict, train_path, PARAM_NAMES, CAL_GRAIN_IDS, STRAIN_FIELD, STRESS_FIELD, NUM_PROCESSORS)
 
         # 2) Assesses the surrogate model on previously optimised parameters
         progressor.progress("Assessing")

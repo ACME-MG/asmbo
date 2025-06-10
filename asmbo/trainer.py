@@ -12,7 +12,7 @@ from mms.interface import Interface
 from asmbo.helper.io import dict_to_csv
 
 def train(train_dict:dict, train_path:str, param_names:list, grain_ids:list,
-          strain_field:str, stress_field:str):
+          strain_field:str, stress_field:str, num_threads:int):
     """
     Trains a surrogate model
     
@@ -23,6 +23,7 @@ def train(train_dict:dict, train_path:str, param_names:list, grain_ids:list,
     * `grain_ids`:    List of grain IDs to conduct the training
     * `strain_field`: Name of the field for the strain data
     * `stress_field`: Name of the field for the stress data
+    * `num_threads`:  The number of threads to use
     """
 
     # Initialise interface
@@ -46,7 +47,8 @@ def train(train_dict:dict, train_path:str, param_names:list, grain_ids:list,
         itf.add_output(output, ["log", "linear"])
 
     # Train surrogate model
-    itf.define_surrogate("kfold_2", num_splits=5, epochs=1000, batch_size=32, verbose=True)
+    itf.set_num_threads(4)
+    itf.define_surrogate("kfold_2", "cpu", num_splits=5, epochs=1000, batch_size=32, verbose=True)
     itf.add_training_data()
     itf.train()
     itf.plot_loss_history()
