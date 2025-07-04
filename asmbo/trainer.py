@@ -66,9 +66,9 @@ def train(train_dict:dict, train_path:str, param_names:list, grain_ids:list,
         use_log   = False,
         plot_file = "stress"
     )
-    itf.plot_validation(
-        headers   = [f"g{grain_id}_{phi}" for grain_id in grain_ids for phi in ["phi_1", "Phi", "phi_2"]],
-        label     = "Orientation (rads)",
-        use_log   = False,
-        plot_file = "all_phi"
-    )
+    # itf.plot_validation(
+    #     headers   = [f"g{grain_id}_{phi}" for grain_id in grain_ids for phi in ["phi_1", "Phi", "phi_2"]],
+    #     label     = "Orientation (rads)",
+    #     use_log   = False,
+    #     plot_file = "all_phi"
+    # )
