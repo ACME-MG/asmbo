@@ -65,15 +65,18 @@ def assess(params_list:list, sm_path:str, exp_path:str, max_strain:float, grain_
         )
 
         # Calculate orientation error
-        geodesic_grid = get_geodesics(
-            grain_ids     = grain_ids,
-            data_dict_1   = exp_dict,
-            data_dict_2   = res_dict,
-            strain_list_1 = exp_dict["strain_intervals"],
-            strain_list_2 = res_dict["strain"],
-            eval_strains  = eval_strains
-        )
-        geodesic_error = np.average([np.sqrt(np.average([g**2 for g in gg])) for gg in geodesic_grid])
+        if grain_ids != []:
+            geodesic_grid = get_geodesics(
+                grain_ids     = grain_ids,
+                data_dict_1   = exp_dict,
+                data_dict_2   = res_dict,
+                strain_list_1 = exp_dict["strain_intervals"],
+                strain_list_2 = res_dict["strain"],
+                eval_strains  = eval_strains
+            )
+            geodesic_error = np.average([np.sqrt(np.average([g**2 for g in gg])) for gg in geodesic_grid])
+        else:
+            geodesic_error = 0
 
         # Add information
         error_dict["iteration"].append(len(error_dict["iteration"])+1)
