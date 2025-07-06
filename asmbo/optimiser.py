@@ -59,14 +59,17 @@ def optimise(train_path:str, opt_path:str, exp_path:str, max_strain:float, grain
     itf.remove_data("strain", max_strain)
     
     # Add errors
-    itf.add_error("area", labels=["strain", "stress"], group="curve", max_value=max_strain, weight=3.1415*len(grain_ids))
-    for i in grain_ids:
-        itf.add_error(
-            error_name  = "geodesic",
-            labels      = ["strain_intervals"] + [f"g{i}_{phi}" for phi in ["phi_1", "Phi", "phi_2"]],
-            eval_x_list = list(np.linspace(0, max_strain, 6))[1:],
-            group       = f"g{i}",
-        )
+    if grain_ids == []:
+        itf.add_error("area", labels=["strain", "stress"], group="curve", max_value=max_strain)
+    else:
+        itf.add_error("area", labels=["strain", "stress"], group="curve", max_value=max_strain, weight=3.1415*len(grain_ids))
+        for i in grain_ids:
+            itf.add_error(
+                error_name  = "geodesic",
+                labels      = ["strain_intervals"] + [f"g{i}_{phi}" for phi in ["phi_1", "Phi", "phi_2"]],
+                eval_x_list = list(np.linspace(0, max_strain, 6))[1:],
+                group       = f"g{i}",
+            )
 
     def plot_ipf(exp_dict:dict, sim_dict:dict, output_path:str) -> None:
         """
